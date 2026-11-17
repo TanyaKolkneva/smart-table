@@ -1,14 +1,46 @@
-import {createComparison, defaultRules} from "../lib/compare.js";
+import { createComparison, defaultRules } from "../lib/compare.js";
 
 // @todo: #4.3 — настроить компаратор
 
+const compare = createComparison(defaultRules);
+
 export function initFiltering(elements, indexes) {
-    // @todo: #4.1 — заполнить выпадающие списки опциями
+  // @todo: #4.1 — заполнить выпадающие списки опциями
 
-    return (data, state, action) => {
-        // @todo: #4.2 — обработать очистку поля
+  Object.keys(indexes) // Получаем ключи из объекта
+    .forEach((elementName) => {
+      // Перебираем по именам
+      elements[elementName].append(
+        // в каждый элемент добавляем опции
+        ...Object.values(indexes[elementName]) // формируем массив имён, значений опций
+          .map((name) => {
+            // используйте name как значение и текстовое содержимое
+            const option = document.createElement("option"); // @todo: создать и вернуть тег опции
+            option.textContent = name;
+            option.value = name;
+            return option;
+          }),
+      );
+    });
 
-        // @todo: #4.5 — отфильтровать данные используя компаратор
-        return data;
+  return (data, state, action) => {
+    // @todo: #4.2 — обработать очистку поля
+
+    if (action && action.name === "clear") {
+      const parent = action.parentElement;
+      if (parent) {
+        const inputField = parent.qwerySelector("input");
+        if (inputField) {
+          inputField.value = "";
+
+          const fieldName = action.dataset.field;
+          if (fieldName) {
+            state[fieldName] = "";
+          }
+        }
+      }
     }
+    // @todo: #4.5 — отфильтровать данные используя компаратор
+    return data.filter((row) => compare(row, state));
+  };
 }
