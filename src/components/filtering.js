@@ -29,9 +29,9 @@ export function initFiltering(elements, indexes) {
     if (action && action.name === "clear") {
       const parent = action.parentElement;
       if (parent) {
-        const inputField = parent.qwerySelector("input");
-        if (inputField) {
-          inputField.value = "";
+        const inputField = parent.querySelector("input");
+        if (inputFind) {
+          inputFind.value = "";
 
           const fieldName = action.dataset.field;
           if (fieldName) {

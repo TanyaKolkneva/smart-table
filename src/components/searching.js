@@ -22,5 +22,5 @@ export function initSearching(searchField) {
       return data;
     }
     return data.filter((item) => comparator(item, { [searchField]: query }));
-  };
+  }
 }
